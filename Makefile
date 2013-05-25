@@ -1,22 +1,31 @@
 HTML = doc/out/index.html
-PRODJS = doc/out/js/mam-pre2-min.js
+JS_GLUE = build/mam-glue.js
+JS_LIB = build/mam-pre3-min.js
 
-all: library doc
+all: doc glue library
 
 clean:
-	rm -f $(HTML) $(PRODJS) mam.js
+	rm -f $(HTML) $(JS_GLUE) $(JS_LIB) build/mam.js
 
 doc: $(HTML)
 
-library: $(PRODJS)
+glue: $(JS_GLUE)
+
+library: $(JS_LIB)
+
 
 $(HTML): doc/README.md doc/out/css/pandoc.css
 	pandoc -s -t html5 -S -c "css/pandoc.css" --toc -o $(HTML) doc/README.md
 
-$(PRODJS): mam.js
-	uglifyjs mam.js -m -c -o $(PRODJS)
+$(JS_GLUE): src/mam-glue.js
+	uglifyjs src/mam-glue.js -m \
+		-b beautify=false,space_colon=false,bracketize=true \
+		-o $(JS_GLUE)
 
-mam.js: mam.coffee
-	coffee -c mam.coffee
+$(JS_LIB): build/mam.js
+	uglifyjs build/mam.js -m -c -o $(JS_LIB)
 
-.PHONY: all library doc clean
+build/mam.js: src/mam.coffee
+	coffee -c -o build/ src/mam.coffee
+
+.PHONY: all clean doc glue library
