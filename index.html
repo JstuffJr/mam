@@ -65,10 +65,12 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </nav>
 <h1 id="introduction"><a href="#introduction">Introduction</a></h1>
 <p>The <em>Media Assets Manager</em> (<strong>MAM</strong> from now on), is a JavaScript library created to assist programmers with the inclusion of publicly hosted media assets in their programs for the <a href="https://www.khanacademy.org/cs">Khan Academy C.S. environment</a>. It currently supports images (and sprite extraction from images), audio elements and fonts.</p>
-<p>MAM is currently under development and it is likely that its internal details and programming interface changes in the near future. If you would like to help by testing it, please check this page regularly for changes.</p>
-<p>This documentation assumes some knowledge of the JavaScript language and the Khan Academy programming environment —specifically, the <a href="processingjs.org/">Processing.js</a> model, and things like what the <code>draw</code> function does, what a <code>PImage</code> is, and so on. If you’re a beginner without too much experience with the K.A. environment, it’s recommended that you spend some time exploring it and creating at least a few simple programs before trying to use MAM.</p>
+<p>MAM is currently under development and it is likely that its internal details and programming interface change in the near future. If you would like to help by testing it, please check this page regularly for changes.</p>
+<p>This documentation assumes some knowledge of the JavaScript language and the Khan Academy programming environment —specifically, the <a href="http://processingjs.org/">Processing.js</a> model, and things like what the <code>draw</code> function does, what a <code>PImage</code> is, and so on. If you’re a beginner without too much experience with the K.A. environment, it’s recommended that you spend some time exploring it and creating at least a few simple programs before trying to use MAM.</p>
 <h2 id="change-log"><a href="#change-log">Change Log</a></h2>
 <ul>
+<li><p><em>2013-05-24</em></p>
+<p><strong>mam-pre2</strong> release.</p></li>
 <li><p><em>2013-05-21</em></p>
 <p>First release.</p></li>
 </ul>
@@ -222,7 +224,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <ul>
 <li><p>Use sprites whenever it makes sense —for example, if you have a series of images for a single animation, or a group of related and similar drawings. In practice, extracting sprites from a single sheet tends to be much more efficient than loading many individual images from an external host.</p></li>
 <li><p>If possible, try not to make your program too dependant on the availability of your media assets. For example, it could happen that sounds in certain formats (like MP3, for example) do not work reliably in many browsers, so if you’re providing your audio files in MP3 format only, then keep in mind that many users may not hear any sounds at all; adjust your program accordingly.</p></li>
-<li><p>Do not go overboard importing assets. Not everyone connects to the Internet through fast lines, and not everyone uses computers or devices with particularly good processors (think of tablets or netbooks, for example). Be reasonable and aim for efficient use of all of your resources.</p></li>
+<li><p>Do not go overboard importing assets. Not everyone connects to the Internet through fast lines, and not everyone uses computers or devices with particularly good processors (think of tablets or netbooks, for example). Also consider that, depending on the terms of service from your hosting provider, using large files may also result in larger bills or poor availability (if you’re subject to bandwidth limits or similar restrictions). Be reasonable and aim for efficient use of all of your resources.</p></li>
+<li><p>Related to the previous point, try to compress your assets as much as possible. Consider that for most casual programs, you don’t really need very high quality sound or graphics. Discussing effective compression techniques is beyond the scope of this document, but it’s certainly a very good idea to look into it if you plan to use media assets frequently in your programs.</p></li>
+<li><p>It also might be worth your time to learn the basics of usability. This is also a big topic by itself, but here’s a few tips: Try to avoid “busy” designs where you try to fill every pixel of your canvas with strong visuals. Be consistent in your style. Don’t start playing sounds or music at the very beginning of your program without user intervention. If possible, try to guide your design decisions by how people actually use your program, as opposed to how you imagine they should use your program.</p></li>
 </ul>
 <h2 id="reporting-bugs"><a href="#reporting-bugs">Reporting Bugs</a></h2>
 <p>If you have a suggestion or want to report a problem, please post a comment in the <em>Tips &amp; Feedback</em> section of the main <a href="http://www.khanacademy.org/cs/mam-demo/1663711308">MAM Demo</a> program.</p>
