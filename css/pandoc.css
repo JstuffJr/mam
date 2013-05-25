@@ -41,7 +41,15 @@ nav#TOC ul ul ul li {
 	list-style-type: circle;
 }
 
+blockquote {
+	border-left: 3px solid #ccc;
+	font-size: 90%;
+	margin-bottom: 10px;
+	margin-left: 50px;
+	margin-top: 10px;
+	padding-left: 15px;
 
+}
 
 pre {
 	border: 1px dotted gray;
@@ -102,7 +110,4 @@ dd p {
 	font-size: 70%;
 	color: gray;
 	text-align: center;
-}
-.gist {
-	font-size: 80%;
 }
