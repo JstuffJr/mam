@@ -9,19 +9,23 @@ environment](https://www.khanacademy.org/cs). It currently supports images
 (and sprite extraction from images), audio elements and fonts.
 
 MAM is currently under development and it is likely that its internal
-details and programming interface changes in the near future. If you would
+details and programming interface change in the near future. If you would
 like to help by testing it, please check this page regularly for changes.
 
 This documentation assumes some knowledge of the JavaScript language and the
 Khan Academy programming environment ---specifically, the
-[Processing.js](processingjs.org/) model, and things like what the `draw`
-function does, what a `PImage` is, and so on. If you're a beginner without
-too much experience with the K.A. environment, it's recommended that you
-spend some time exploring it and creating at least a few simple programs
-before trying to use MAM.
+[Processing.js][pjs] model, and things like what the `draw` function does,
+what a `PImage` is, and so on. If you're a beginner without too much
+experience with the K.A. environment, it's recommended that you spend some
+time exploring it and creating at least a few simple programs before trying
+to use MAM.
 
 
 ## Change Log
+
+*   *2013-05-24*
+
+    **mam-pre2** release.
 
 *   *2013-05-21*
 
@@ -48,8 +52,7 @@ substitute for valid legal advice):
     share. Content creators who want to publicly share their work usually do
     so by releasing their assets under a specific license which grants
     certain rights. Look for assets released under licenses such as those
-    promoted by the [Creative Commons](http://creativecommons.org/)
-    initiative.
+    promoted by the [Creative Commons][cc] initiative.
 
 *   The fact that you can find a file in a public website *does not* mean
     that you can use it freely, unless it comes with a license that grants
@@ -72,7 +75,7 @@ people's rights. Fortunately, the Internet is a big place, and many people
 do share their works with permisive licenses. You may want to spend some
 time doing a little research with your favourite web search tool. A good
 place to start is this: [Art asset
-resources](http://freegamedev.net/wiki/Free_3D_and_2D_art_and_audio_resources)
+resources][art-resources]
 from FreeGameDevWiki.
 
 
@@ -394,8 +397,27 @@ Sandbox](http://lbv.github.io/ka-cs-programs/other/sandbox.html).
 *   Do not go overboard importing assets. Not everyone connects to the
     Internet through fast lines, and not everyone uses computers or devices
     with particularly good processors (think of tablets or netbooks, for
-    example). Be reasonable and aim for efficient use of all of your
+    example). Also consider that, depending on the terms of service from
+    your hosting provider, using large files may also result in larger bills
+    or poor availability (if you're subject to bandwidth limits or similar
+    restrictions). Be reasonable and aim for efficient use of all of your
     resources.
+
+*   Related to the previous point, try to compress your assets as much as
+    possible. Consider that for most casual programs, you don't really need
+    very high quality sound or graphics. Discussing effective compression
+    techniques is beyond the scope of this document, but it's certainly a
+    very good idea to look into it if you plan to use media assets
+    frequently in your programs.
+
+*   It also might be worth your time to learn the basics of usability. This
+    is also a big topic by itself, but here's a few tips: Try to avoid
+    "busy" designs where you try to fill every pixel of your canvas with
+    strong visuals. Be consistent in your style. Don't start playing sounds
+    or music at the very beginning of your program without user
+    intervention. If possible, try to guide your design decisions by how
+    people actually use your program, as opposed to how you imagine they
+    should use your program.
 
 
 ## Reporting Bugs
@@ -438,3 +460,7 @@ program if possible.
 ## Appendix B: Hosting Content in Google Drive
 
 To be added.
+
+[art-resources]: http://freegamedev.net/wiki/Free_3D_and_2D_art_and_audio_resources
+[cc]: http://creativecommons.org/
+[pjs]: http://processingjs.org/
