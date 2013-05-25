@@ -1,0 +1,7 @@
+.gist {
+	font-size: 80%;
+}
+
+.gist .gist-file .gist-data {
+	max-height: 32em;
+}

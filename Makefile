@@ -15,7 +15,9 @@ library: $(JS_LIB)
 
 
 $(HTML): doc/README.md doc/out/css/pandoc.css
-	pandoc -s -t html5 -S -c "css/pandoc.css" --toc -o $(HTML) doc/README.md
+	pandoc -s -t html5 -S -c "css/pandoc.css" -c "css/gist.css" \
+		--toc --toc-depth=2 \
+		-o $(HTML) doc/README.md
 
 $(JS_GLUE): src/mam-glue.js
 	uglifyjs src/mam-glue.js -m \
