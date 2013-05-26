@@ -88,7 +88,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <ul>
 <li><p>The glue code. A short segment of code that imports the MAM library itself.</p></li>
 <li><p>The definition of a <em>configuration object</em>. This specifies all the media assets that you want to use in your program, as well as a few other important details that connect your programs with those assets once they have been loaded.</p></li>
-<li><p>Finally, a call to the <code>mamLoad</code> function. It simply receives the configuration object, and initiates the process of loading the assets.</p></li>
+<li><p>Finally, a call to the <code>mamLoad</code> function. This function simply receives the configuration object, and initiates the process of loading the assets.</p></li>
 </ul>
 <p>These elements will be described in more detail in the following sections.</p>
 <p>A good way to learn how MAM works is by playing with a few examples. You can start by exploring the official <a href="http://www.khanacademy.org/cs/mam-demo/1663711308">MAM Demo</a>. You can also find shorter and more specific examples in <a href="#appendix-a">Appendix A</a>.</p>
@@ -98,7 +98,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script src="https://gist.github.com/lbv/5621048.js"></script>
 
 <p>Just copy and paste it. It’s probably a good idea to put it right at the top of your program.</p>
-<p>Notice that this code has been “minified” intentionally, to make it easy to move around and paste into any JavaScript program. You don’t need to understand how it works in order to use MAM. If you’re interested, though, you can find this glue code in its original form <a href="https://github.com/lbv/mam/blob/master/src/mam-glue.js">here</a>.</p>
+<p>Notice that this code has been intentionally <em><a href="http://lisperator.net/uglifyjs/">uglified</a></em>, to make it easy to move around and paste into any JavaScript program. You don’t need to understand how it works in order to use MAM. If you’re interested, though, you can find this glue code in its original form <a href="https://github.com/lbv/mam/blob/master/src/mam-glue.js">here</a>.</p>
 <h2 id="the-configuration-object"><a href="#the-configuration-object">The Configuration Object</a></h2>
 <p>To use MAM, you need to tell it what assets you want to load, and how your program should behave after those assets have been loaded. This is done through a plain JavaScript object, which can look something like this:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// main configuration object</span>
@@ -135,7 +135,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>All the properties shown in the code above are optional, so you don’t <em>have</em> to include them all. The following sections will go into more detail about what each property does.</p>
 <h3 id="defining-images"><a href="#defining-images">Defining Images</a></h3>
 <p>You can define a group of images to be imported by declaring them in an object under the <code>images</code> key of the main configuration object.</p>
-<p>Each key of this object will be used as the identifier of an image, and its value should be a string that specifies the URL where that image is being hosted.</p>
+<p>Each key in this object will be used as the identifier of an image, and its value should be a string that specifies the URL where that image is being hosted.</p>
 <p>The following example defines two images, called <code>drawing</code> and <code>myPicture</code> (you would have to make sure that the URLs are valid for your own images, of course):</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
     <span class="dt">images</span>: {
@@ -162,9 +162,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <span class="dt">panels</span>: <span class="st">&#39;https://example.com/four_panels.png&#39;</span>
     }
 };</code></pre>
-<p>With this in place, we can now specify sprites through the <code>sprites</code> property of the main configuration object. The keys of this object will be used as identifiers for the sprites, and the values must be objects that declare the following keys:</p>
+<p>With this in place, we can now specify sprites through the <code>sprites</code> property of the main configuration object. The keys of this object will be used as identifiers for the sprites, and the values must be objects that declare the following properties:</p>
 <ul>
-<li><code>sheet</code> — The name of the image (from the <code>images</code> property) from which the sprite(s) will be extracted.</li>
+<li><code>sheet</code> — The name of the image (as it was written in the <code>images</code> property from the main config object) from which the sprite(s) will be extracted.</li>
 <li><code>x</code> — The <em>X</em> coordinate for the sprite inside the sheet.</li>
 <li><code>y</code> — The <em>Y</em> coordinate.</li>
 <li><code>width</code> — The width (in pixels) of the sprite.</li>
@@ -203,7 +203,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
     }
 };</code></pre>
 <h3 id="defining-audio-elements"><a href="#defining-audio-elements">Defining Audio Elements</a></h3>
-<p>Recent browsers have fairly good support for <a href="http://en.wikipedia.org/wiki/HTML5_Audio">HTML5 Audio</a>, a relatively recent mechanism designed to manipulate audio content inside web documents.</p>
+<p>Modern browsers have fairly good support for <a href="http://en.wikipedia.org/wiki/HTML5_Audio">HTML5 Audio</a>, a relatively recent mechanism designed to manipulate audio content inside web documents.</p>
 <p>With it, it’s pretty straightforward to play sounds and music from your programs. The main challenge at the moment is providing the audio in a format that is supported by as many browsers as possible. It is recommended that you choose files of type <em>audio/ogg</em> (typically with the file extension <code>.ogg</code>), since that will probably work without too much trouble in all major browsers supported by the Khan Academy environment.</p>
 <p>MAM supports loading audio elements, and provides them as objects of type <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement"><code>HTMLAudioElement</code></a> in the main callback. Just specify the <code>audio</code> property in the main configuration object, with an object where each key will be used as the audio identifier, and its value is a string specifying the URL where the audio file is hosted. You may also specify an array with one or more URLs, in case you want to provide alternative formats for the same audio element. Browsers will use the first audio file that it has support for.</p>
 <p>An example:</p>
@@ -308,13 +308,13 @@ src="https://gist.github.com/lbv/5621644.js?file=mam-example-no-cors.js"></scrip
 <li><p>Use sprites whenever it makes sense —for example, if you have a series of images for a single animation, or a group of related and similar drawings. In practice, extracting sprites from a single sheet tends to be much more efficient than loading many individual images from an external host.</p></li>
 <li><p>If possible, try not to make your program too dependant on the availability of your media assets. For example, it could happen that sounds in certain formats (like MP3, for example) do not work reliably in many browsers, so if you’re providing your audio files in MP3 format only, then keep in mind that many users may not hear any sounds at all; adjust your program accordingly.</p></li>
 <li><p>Do not go overboard importing assets. Not everyone connects to the Internet through fast lines, and not everyone uses computers or devices with particularly good processors (think of tablets or netbooks, for example). Also consider that, depending on the terms of service from your hosting provider, using large files may also result in larger bills or poor availability (if you’re subject to bandwidth limits or similar restrictions). Be reasonable and aim for efficient use of all of your resources.</p></li>
-<li><p>Related to the previous point, try to compress your assets as much as possible. Consider that for most casual programs, you don’t really need very high quality sound or graphics. Discussing effective compression techniques is beyond the scope of this document, but it’s certainly a very good idea to look into it if you plan to use media assets frequently in your programs.</p></li>
+<li><p>Related to the previous point, try to compress your assets as much as possible. Consider that for most casual programs, you don’t really need very high quality sounds or graphics. Discussing effective compression techniques is beyond the scope of this document, but it’s certainly a very good idea to look into it if you plan to use media assets frequently in your programs.</p></li>
 <li><p>It also might be worth your time to learn the basics of <em>computer system usability</em> and <em>user experience</em>. This is a big topic by itself, but here’s a few tips: Try to avoid “busy” designs where you try to fill every pixel of your canvas with strong visuals. Be consistent in your style. Don’t start playing sounds or music at the very beginning of your program without user intervention. If possible, try to guide your design decisions by how people actually use your program, as opposed to how you imagine they should use your program.</p></li>
 </ul>
 <h2 id="appendix-d-this-tool-and-the-k.a."><a href="#appendix-d-this-tool-and-the-k.a.">Appendix D: This Tool and the K.A.</a></h2>
-<p>As a user of the Khan Academy for some time, I’ve had the opportunity to notice a number things pertaining its community and the behaviour of different types of users of the Computer Science section. I’m aware of the potential misuse that a tool like MAM could represent in this context.</p>
-<p>I’ve repeatedly considered this situation from many different angles, and my conclusion (at least for the time being) is that I do think that exploring previously untapped aspects of the programming environment is useful in itself and, although it could be subject to some degree of abuse (like any other type of technology), I lean towards trusting the current mechanisms in place to moderate the content generated by Khan Academy users.</p>
-<p>I realize that when a new tool comes along that provides a greater degree of flexibility for the creation of public creative works, there can be concerns regarding security as well as social behaviour behind it. I’m fully prepared to contribute in any way I can to provide the most secure as well as useful and beginner–friendly tool possible. It’s perfectly possible that new restrictions might be considered for the programming environment as a result of something like MAM. Nevertheless, it’s my intention to advocate for a responsible use from day one, and it is my hope that, as the saying goes, the baby is not thrown out along with the bath water.</p>
+<p>As a user of the Khan Academy for some time, I’ve had the opportunity to notice a number of things pertaining its community and the behaviour of different types of users of its Computer Science section. I’m aware of the potential misuse that a tool like MAM could represent in this context.</p>
+<p>I’ve repeatedly considered this situation from many different angles, and my conclusion —at least for the time being— is that I do think that exploring previously untapped aspects of the programming environment is useful in itself and, although it could be subject to some degree of abuse (like any other type of technology), I lean towards trusting the current mechanisms in place to moderate the content generated by Khan Academy users.</p>
+<p>I realize that when a new tool comes along that provides a greater degree of flexibility for the creation of public creative works, there can be concerns regarding security as well as social behaviour behind it. I’m willing to contribute in any way I can to provide the most secure as well as useful and beginner–friendly tool possible. It’s perfectly possible that new restrictions might be considered for the programming environment as a result of something like MAM. Nevertheless, it’s my intention to advocate for a responsible use from day one, and it is my hope that, as the saying goes, the baby is not thrown out along with the bath water.</p>
 <p>In case these issues interest you, I have written more about this topic in the following document: <a href="http://lbv.github.io/ka-cs-programs/other/sandbox.html">The Khan Academy C.S. Sandbox</a>.</p>
 <p>I recently came across <a href="http://ask.slashdot.org/comments.pl?sid=3782789&amp;cid=43813915">a message</a> from <a href="http://en.wikipedia.org/wiki/Jimmy_Wales">Jimmy Wales</a> that I think sums up nicely my take on these issues:</p>
 <blockquote>
