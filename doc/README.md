@@ -121,8 +121,9 @@ A program using MAM should include the following elements:
     important details that connect your programs with those assets once they
     have been loaded.
 
-*   Finally, a call to the `mamLoad` function. It simply receives the
-    configuration object, and initiates the process of loading the assets.
+*   Finally, a call to the `mamLoad` function. This function simply receives
+    the configuration object, and initiates the process of loading the
+    assets.
 
 These elements will be described in more detail in the following sections.
 
@@ -146,10 +147,10 @@ This glue code is presented here:
 Just copy and paste it. It's probably a good idea to put it right at the top
 of your program.
 
-Notice that this code has been "minified" intentionally, to make it easy to
-move around and paste into any JavaScript program. You don't need to
-understand how it works in order to use MAM. If you're interested, though,
-you can find this glue code in its original form
+Notice that this code has been intentionally *[uglified][uglifyjs]*, to make
+it easy to move around and paste into any JavaScript program. You don't need
+to understand how it works in order to use MAM. If you're interested,
+though, you can find this glue code in its original form
 [here](https://github.com/lbv/mam/blob/master/src/mam-glue.js).
 
 
@@ -202,7 +203,7 @@ what each property does.
 You can define a group of images to be imported by declaring them in an
 object under the `images` key of the main configuration object.
 
-Each key of this object will be used as the identifier of an image, and its
+Each key in this object will be used as the identifier of an image, and its
 value should be a string that specifies the URL where that image is being
 hosted.
 
@@ -279,10 +280,11 @@ var config = {
 With this in place, we can now specify sprites through the `sprites`
 property of the main configuration object. The keys of this object will be
 used as identifiers for the sprites, and the values must be objects that
-declare the following keys:
+declare the following properties:
 
-*   `sheet` --- The name of the image (from the `images` property) from
-    which the sprite(s) will be extracted.
+*   `sheet` --- The name of the image (as it was written in the `images`
+    property from the main config object) from which the sprite(s) will be
+    extracted.
 *   `x` --- The *X* coordinate for the sprite inside the sheet.
 *   `y` --- The *Y* coordinate.
 *   `width` --- The width (in pixels) of the sprite.
@@ -333,9 +335,9 @@ var config = {
 
 ### Defining Audio Elements
 
-Recent browsers have fairly good support for [HTML5
-Audio](http://en.wikipedia.org/wiki/HTML5_Audio), a relatively recent
-mechanism designed to manipulate audio content inside web documents.
+Modern browsers have fairly good support for [HTML5 Audio][html5-audio], a
+relatively recent mechanism designed to manipulate audio content inside web
+documents.
 
 With it, it's pretty straightforward to play sounds and music from your
 programs. The main challenge at the moment is providing the audio in a
@@ -345,13 +347,13 @@ that you choose files of type *audio/ogg* (typically with the file extension
 browsers supported by the Khan Academy environment.
 
 MAM supports loading audio elements, and provides them as objects of type
-[`HTMLAudioElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement)
-in the main callback. Just specify the `audio` property in the main
-configuration object, with an object where each key will be used as the
-audio identifier, and its value is a string specifying the URL where the
-audio file is hosted. You may also specify an array with one or more URLs,
-in case you want to provide alternative formats for the same audio element.
-Browsers will use the first audio file that it has support for.
+[`HTMLAudioElement`][html-audio-element] in the main callback. Just specify
+the `audio` property in the main configuration object, with an object where
+each key will be used as the audio identifier, and its value is a string
+specifying the URL where the audio file is hosted. You may also specify an
+array with one or more URLs, in case you want to provide alternative formats
+for the same audio element. Browsers will use the first audio file that it
+has support for.
 
 An example:
 
@@ -584,7 +586,7 @@ Having said that, here's a few recommendations:
 
 *   Related to the previous point, try to compress your assets as much as
     possible. Consider that for most casual programs, you don't really need
-    very high quality sound or graphics. Discussing effective compression
+    very high quality sounds or graphics. Discussing effective compression
     techniques is beyond the scope of this document, but it's certainly a
     very good idea to look into it if you plan to use media assets
     frequently in your programs.
@@ -602,20 +604,20 @@ Having said that, here's a few recommendations:
 ## Appendix D: This Tool and the K.A.
 
 As a user of the Khan Academy for some time, I've had the opportunity to
-notice a number things pertaining its community and the behaviour of
-different types of users of the Computer Science section. I'm aware of the
+notice a number of things pertaining its community and the behaviour of
+different types of users of its Computer Science section. I'm aware of the
 potential misuse that a tool like MAM could represent in this context.
 
 I've repeatedly considered this situation from many different angles, and my
-conclusion (at least for the time being) is that I do think that exploring
-previously untapped aspects of the programming environment is useful in
-itself and, although it could be subject to some degree of abuse (like any
-other type of technology), I lean towards trusting the current mechanisms in
-place to moderate the content generated by Khan Academy users.
+conclusion ---at least for the time being--- is that I do think that
+exploring previously untapped aspects of the programming environment is
+useful in itself and, although it could be subject to some degree of abuse
+(like any other type of technology), I lean towards trusting the current
+mechanisms in place to moderate the content generated by Khan Academy users.
 
 I realize that when a new tool comes along that provides a greater degree of
 flexibility for the creation of public creative works, there can be concerns
-regarding security as well as social behaviour behind it. I'm fully prepared
+regarding security as well as social behaviour behind it. I'm willing
 to contribute in any way I can to provide the most secure as well as
 useful and beginner--friendly tool possible. It's perfectly possible that
 new restrictions might be considered for the programming environment as a
@@ -646,10 +648,13 @@ that I think sums up nicely my take on these issues:
 [flickr]: http://www.flickr.com/
 [google-drive]: https://drive.google.com/
 [grin]: http://grin.hq.nasa.gov/
+[html5-audio]: http://en.wikipedia.org/wiki/HTML5_Audio
+[html-audio-element]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement
 [jimbo]: http://en.wikipedia.org/wiki/Jimmy_Wales
 [jimbo-message]: http://ask.slashdot.org/comments.pl?sid=3782789&cid=43813915
 [loc]: http://www.loc.gov/
 [mam-demo]: http://www.khanacademy.org/cs/mam-demo/1663711308
 [nypl]: http://digitalgallery.nypl.org/nypldigital/
 [pjs]: http://processingjs.org/
+[uglifyjs]: http://lisperator.net/uglifyjs/
 [wikicommons]: http://commons.wikimedia.org/wiki/Main_Page
