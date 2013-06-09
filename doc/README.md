@@ -24,6 +24,12 @@ to use MAM.
 
 ## Change Log
 
+*   *2013-06-09*
+
+    **mam-pre4** release. New fallbacks mechanisms to import images in
+    situations where the client or server has limited support for CORS (e.g.
+    in Safari versions < 6).
+
 *   *2013-05-25*
 
     **mam-pre3** release. Use CORS for images by default.
@@ -246,13 +252,14 @@ var config = {
 };
 ```
 
-However, when your image is imported from a server without CORS, then once
-you paint it into your canvas (using the `image` function, for example),
-then the canvas becomes "tainted", which means that it becomes
-*write--only* (it becomes impossible to read the state of its pixels), and
-this could result in a situation where you can no longer save your program
-in the Khan Academy, because part of the saving process involves obtaining
-the picture from the canvas.
+When CORS is explicitly disabled (as shown above), or if the client's
+browser has limited support for CORS when loading images, MAM still tries to
+obtain those files in a way that doesn't _taint_ the canvas, but it may or
+may not work, depending on the browser used by the client. A "tainted"
+canvas means that it becomes *write--only* (it becomes impossible to read
+the state of its pixels), and this could result in a situation where you can
+no longer save your program in the Khan Academy, because part of the saving
+process involves obtaining the picture from the canvas.
 
 For more information on CORS and its implications, you may read [this
 document][cors-more].

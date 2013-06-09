@@ -1,10 +1,16 @@
 root = exports ? this
 
-MAM_VERSION = 'pre3'
+MAM_VERSION = 'pre4'
 GOOGLE_FONTS = '//ajax.googleapis.com/ajax/libs/webfont/1/webfont.js'
 
 mamPrint = (msg) ->
 	console.log "MAM #{MAM_VERSION} - #{msg}"
+
+checkCORS = ->
+	img = $ '<img />'
+	img[0].crossOrigin?
+
+hasCORS = checkCORS()
 
 class Task
 	constructor: ->
@@ -55,7 +61,7 @@ root.MAM = class MAM
 		urls = [ urls ] if typeof urls is 'string'
 		for url in urls
 			type = ''
-			ext = url.substr(-4)
+			ext = url.substr -4
 			if ext is '.mp3' or ext is '.mpg'
 				type = 'audio/mpeg'
 			else if ext is '.ogg'
@@ -97,13 +103,10 @@ root.MAM = class MAM
 		@task.add()
 		@imgTask.add()
 
-		cors = @config.enableCORS ? true
-
 		img = $ "<img />"
-		img.attr 'crossOrigin', 'anonymous' if cors
-		img.attr 'src', url
-
 		img.on 'load', =>
+			if img[0].src.substr(0, 4) is 'blob'
+				root.URL.revokeObjectURL img[0].src
 			pimg = @pjs.createImage img.width(), img.height(), @pjs.ARGB
 			pimg.sourceImg.getContext('2d').drawImage img[0], 0, 0
 
@@ -113,6 +116,30 @@ root.MAM = class MAM
 			@task.dfd.notify 'image', id
 			@task.sub @media
 			@imgTask.sub()
+
+		cors = @config.enableCORS ? true
+		if cors and hasCORS
+			img.attr 'crossOrigin', 'anonymous'
+			img.attr 'src', url
+		else
+			xhr = new XMLHttpRequest()
+			xhr.open 'GET', url, true
+			xhr.responseType = 'arraybuffer'
+			xhr.onload = ->
+				return unless @status is 200
+				mime = @getResponseHeader 'Content-Type'
+				view = new Uint8Array @response
+				try
+					blob = new Blob [ view ], type: mime
+					img.attr 'src', root.URL.createObjectURL blob
+				catch
+					str = ''
+					str += String.fromCharCode code for code in view
+					b64 = root.btoa str
+					dataURI = "data:#{mime};base64,#{b64}"
+					img.attr 'src', dataURI
+
+			xhr.send()
 
 		$('body').append img
 
