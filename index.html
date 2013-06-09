@@ -60,6 +60,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>This documentation assumes some knowledge of the JavaScript language and the Khan Academy programming environment —specifically, the <a href="http://processingjs.org/">Processing.js</a> model, and things like what the <code>draw</code> function does, what a <code>PImage</code> is, and so on. If you’re a beginner without too much experience with the K.A. environment, it’s recommended that you spend some time exploring it and creating at least a few simple programs before trying to use MAM.</p>
 <h2 id="change-log"><a href="#change-log">Change Log</a></h2>
 <ul>
+<li><p><em>2013-06-09</em></p>
+<p><strong>mam-pre4</strong> release. New fallbacks mechanisms to import images in situations where the client or server has limited support for CORS (e.g. in Safari versions &lt; 6).</p></li>
 <li><p><em>2013-05-25</em></p>
 <p><strong>mam-pre3</strong> release. Use CORS for images by default.</p></li>
 <li><p><em>2013-05-24</em></p>
@@ -152,7 +154,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
     },
     <span class="dt">enableCORS</span>: <span class="kw">false</span>
 };</code></pre>
-<p>However, when your image is imported from a server without CORS, then once you paint it into your canvas (using the <code>image</code> function, for example), then the canvas becomes “tainted”, which means that it becomes <em>write–only</em> (it becomes impossible to read the state of its pixels), and this could result in a situation where you can no longer save your program in the Khan Academy, because part of the saving process involves obtaining the picture from the canvas.</p>
+<p>When CORS is explicitly disabled (as shown above), or if the client’s browser has limited support for CORS when loading images, MAM still tries to obtain those files in a way that doesn’t <em>taint</em> the canvas, but it may or may not work, depending on the browser used by the client. A “tainted” canvas means that it becomes <em>write–only</em> (it becomes impossible to read the state of its pixels), and this could result in a situation where you can no longer save your program in the Khan Academy, because part of the saving process involves obtaining the picture from the canvas.</p>
 <p>For more information on CORS and its implications, you may read <a href="https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image">this document</a>.</p>
 <h3 id="defining-sprites"><a href="#defining-sprites">Defining Sprites</a></h3>
 <p>For the purposes of this document, the term “sprite” will mean an image that is “extracted” from another (probably larger) image.</p>
