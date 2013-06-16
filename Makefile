@@ -1,6 +1,6 @@
 HTML = doc/out/index.html
 JS_GLUE = build/mam-glue.js
-JS_LIB = build/mam-pre4-min.js
+JS_LIB = build/mam-pre5-min.js
 
 all: doc glue library
 
