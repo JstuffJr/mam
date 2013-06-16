@@ -60,6 +60,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>This documentation assumes some knowledge of the JavaScript language and the Khan Academy programming environment —specifically, the <a href="http://processingjs.org/">Processing.js</a> model, and things like what the <code>draw</code> function does, what a <code>PImage</code> is, and so on. If you’re a beginner without too much experience with the K.A. environment, it’s recommended that you spend some time exploring it and creating at least a few simple programs before trying to use MAM.</p>
 <h2 id="change-log"><a href="#change-log">Change Log</a></h2>
 <ul>
+<li><p><em>2013-06-16</em></p>
+<p><strong>mam-pre5p1</strong> release. Bug fixes. New <code>debug</code> property in the MAM configuration object can be used to provide verbose information about the assets loading process. New <code>support</code> property in MAM’s return object, provides information about the user’s browser. Now the loading process doesn’t get stuck on audio elements, since detecting if they are fully loaded is unreliable <em>by design</em>.</p></li>
 <li><p><em>2013-06-09</em></p>
 <p><strong>mam-pre4</strong> release. New fallbacks mechanisms to import images in situations where the client or server has limited support for CORS (e.g. in Safari versions &lt; 6).</p></li>
 <li><p><em>2013-05-25</em></p>
@@ -205,19 +207,22 @@ code > span.er { color: #ff0000; font-weight: bold; }
     }
 };</code></pre>
 <h3 id="defining-audio-elements"><a href="#defining-audio-elements">Defining Audio Elements</a></h3>
-<p>Modern browsers have fairly good support for <a href="http://en.wikipedia.org/wiki/HTML5_Audio">HTML5 Audio</a>, a relatively recent mechanism designed to manipulate audio content inside web documents.</p>
-<p>With it, it’s pretty straightforward to play sounds and music from your programs. The main challenge at the moment is providing the audio in a format that is supported by as many browsers as possible. It is recommended that you choose files of type <em>audio/ogg</em> (typically with the file extension <code>.ogg</code>), since that will probably work without too much trouble in all major browsers supported by the Khan Academy environment.</p>
-<p>MAM supports loading audio elements, and provides them as objects of type <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement"><code>HTMLAudioElement</code></a> in the main callback. Just specify the <code>audio</code> property in the main configuration object, with an object where each key will be used as the audio identifier, and its value is a string specifying the URL where the audio file is hosted. You may also specify an array with one or more URLs, in case you want to provide alternative formats for the same audio element. Browsers will use the first audio file that it has support for.</p>
+<p>Modern browsers support <a href="http://en.wikipedia.org/wiki/HTML5_Audio">HTML5 Audio</a>, a relatively recent mechanism designed to manipulate audio content inside web documents.</p>
+<p>With it, it’s pretty straightforward to play basic sounds and music from your programs. The main challenge at the moment is providing the audio in a format that is supported by as many browsers as possible. It is recommended that you provide your audio elements in at least a couple of different formats. Using <em>audio/ogg</em> (with the file extension <code>.ogg</code>), and <em>audio/mpg</em> (with the file extension <code>.mp3</code>) is a good combination, since both provide good compression, and between the two there’s a good chance that the audio will work in all major browsers supported by the Khan Academy environment. If you only provide one format per file, then it’s very likely that some users of your program will not hear any sounds (e.g. <code>.ogg</code> files don’t work in current versions of Safari, and <code>.mp3</code> files don’t work in current versions of Firefox).</p>
+<p>MAM loads audio elements, and provides them as objects of type <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement"><code>HTMLAudioElement</code></a> in the main callback. Just specify the <code>audio</code> property in the main configuration object, with an object where each key will be used as the audio identifier, and its value is a string specifying the URL where the audio file is hosted. You may also specify an array with one or more URLs, to provide alternative formats for the same audio element. Browsers will use the first audio file that it has support for.</p>
 <p>An example:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
     <span class="dt">audio</span>: {
         <span class="dt">song</span>: <span class="st">&#39;https://www.example.com/cool_song.ogg&#39;</span>,
         <span class="dt">boom</span>: [
+            <span class="st">&#39;http://example.com/sounds/boom.ogg&#39;</span>,
             <span class="st">&#39;http://example.com/sounds/boom.mp3&#39;</span>,
             <span class="st">&#39;http://example.com/sounds/boom.wav&#39;</span>
         ]
     }
 };</code></pre>
+<p>If the browser doesn’t have support for <code>Audio</code> elements, or if a specific audio element you requested is in a format not supported by the user’s browser, then MAM will not return the corresponding audio element in the main callback. This means you should always verify inside your program if the audio elements are defined or not, before you play them. In addition, you should not rely on the audio elements being fully loaded by the browser inside the main callback. Detecting if audio elements are fully ready to be played using HTML5 is unreliable <em>by design</em>.</p>
+<p>For more details on the proper way to setup audio with MAM, check out the audio example from <a href="#appendix-a">Appendix A</a>.</p>
 <h3 id="defining-fonts"><a href="#defining-fonts">Defining Fonts</a></h3>
 <p>Displaying text is a very basic and important operation for many programs. However, there is a common problem related to rendering text which is that of <em>fonts</em>.</p>
 <p>Usually when you choose a certain font for your program’s text, it has to belong to one of the very few widely available (or simply generic) font families used in computing. Otherwise, there’s a good chance that many users who don’t have the relevant font(s) installed in their systems will see your program with a different, “fallback” font, and this could easily ruin the layout of your interface or even make it altogether unusable.</p>
@@ -228,9 +233,21 @@ code > span.er { color: #ff0000; font-weight: bold; }
 };</code></pre>
 <p>The previous example loads two font families, called <em>Roboto Slab</em> and <em>Milonga</em>. Visit the Google Fonts website for more details about these and other available fonts.</p>
 <p>The fonts are given back to you in the main callback as objects of type <a href="http://processingjs.org/reference/PFont/"><code>PFont</code></a>, which you can then use with the regular <code>textFont</code> and <code>text</code> functions.</p>
+<h3 id="debug-information"><a href="#debug-information">Debug Information</a></h3>
+<p>If you run into problems using MAM, try specifying the <code>debug</code> property in the MAM configuration object (setting it to a <em>truthy</em> value), and then check your browser’s JavaScript console. Example:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
+    <span class="dt">debug</span>: <span class="kw">true</span>,
+    <span class="dt">images</span>: { <span class="dt">pic</span>: <span class="st">&#39;http://example.com/mypicture.jpg&#39;</span> },
+    <span class="dt">audio</span>: { <span class="dt">song</span>: <span class="st">&#39;http://example.com/song.mp3&#39;</span> }
+};</code></pre>
 <h3 id="main-callback"><a href="#main-callback">The Main Callback</a></h3>
 <p>All the previous properties were used to declare which assets to import. Now, in order to use them, you need to react in some way to the event that is fired when all the assets have been loaded.</p>
 <p>The first way in which you can react to that event is by specifying the <code>onReady</code> property in the main configuration object. This should be set to a function that will be called one time (and only one time) right after your assets are ready. The <code>onReady</code> property acts as a <em>callback</em>, and it receives a single parameter, which will be an object filled with all the assets for your program. The structure of this object will mirror the way you declared your assets in the main configuration object. For example, if you declare an image as <code>config.images.myImage</code>, then you can refer to that asset as <code>media.images.myImage</code> (provided that you use the name <code>media</code> for the single argument to <code>onReady</code>).</p>
+<p>This “return value”, which is passed as the only argument to your main callback also contains an object under the <code>support</code> property, which will contain the following values:</p>
+<ul>
+<li><p><code>audio</code>: True if, and only if, the browser has support for HTML5 audio. All modern browsers <em>should</em> have audio support, but Safari is a notable exception under certain setups, where multimedia support depends on external software (the Quicktime runtime).</p></li>
+<li><p><code>cors</code>: True if, and only if, the browser has support for requesting images with the HTML <code>image</code> tag, using the CORS technology. MAM tries some fallback mechanisms to load the images anyway in browsers that don’t support this (notably, Safari versions older than 6.0), but in case something doesn’t work, you can start by checking this value.</p></li>
+</ul>
 <p>Here’s a short example:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
     <span class="dt">images</span>: {
@@ -240,6 +257,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="dt">onReady</span>: <span class="kw">function</span>(media) {
         <span class="fu">background</span>(<span class="dv">255</span>, <span class="dv">255</span>, <span class="dv">255</span>);
         <span class="fu">image</span>(<span class="ot">media</span>.<span class="ot">images</span>.<span class="fu">somePicture</span>, <span class="dv">0</span>, <span class="dv">0</span>);
+
+        <span class="kw">if</span> (<span class="ot">media</span>.<span class="ot">support</span>.<span class="fu">audio</span>) {
+            <span class="fu">println</span>(<span class="st">&#39;The browser has support for audio&#39;</span>);
+        }
+        <span class="kw">if</span> (<span class="ot">media</span>.<span class="ot">support</span>.<span class="fu">cors</span>) {
+            <span class="fu">println</span>(<span class="st">&#39;The browser supports CORS images&#39;</span>);
+        }
     }
 };
 
@@ -289,7 +313,7 @@ src="https://gist.github.com/lbv/5621644.js?file=mam-example-no-cors.js"></scrip
 <script src="https://gist.github.com/lbv/5621644.js?file=mam-example-sprites.js"></script>
 
 <h3 id="importing-audio"><a href="#importing-audio">Importing Audio</a></h3>
-<p>Reproduces two sounds, one in OGG format and one in WAV format. It also illustrated the use of the <code>loop</code> property in a <code>HTMLAudioElement</code> object.</p>
+<p>Reproduces two sounds, one in OGG format and one in WAV format. It also illustrates the use of the <code>loop</code> property in a <code>HTMLAudioElement</code> object.</p>
 <script src="https://gist.github.com/lbv/5621644.js?file=mam-example-audio.js"></script>
 
 <h3 id="importing-fonts"><a href="#importing-fonts">Importing Fonts</a></h3>
