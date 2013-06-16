@@ -24,6 +24,15 @@ to use MAM.
 
 ## Change Log
 
+*   *2013-06-16*
+
+    **mam-pre5p1** release. Bug fixes. New `debug` property in the MAM
+    configuration object can be used to provide verbose information about
+    the assets loading process. New `support` property in MAM's return
+    object, provides information about the user's browser. Now the loading
+    process doesn't get stuck on audio elements, since detecting if they are
+    fully loaded is unreliable *by design*.
+
 *   *2013-06-09*
 
     **mam-pre4** release. New fallbacks mechanisms to import images in
@@ -342,25 +351,30 @@ var config = {
 
 ### Defining Audio Elements
 
-Modern browsers have fairly good support for [HTML5 Audio][html5-audio], a
-relatively recent mechanism designed to manipulate audio content inside web
-documents.
+Modern browsers support [HTML5 Audio][html5-audio], a relatively recent
+mechanism designed to manipulate audio content inside web documents.
 
-With it, it's pretty straightforward to play sounds and music from your
-programs. The main challenge at the moment is providing the audio in a
+With it, it's pretty straightforward to play basic sounds and music from
+your programs. The main challenge at the moment is providing the audio in a
 format that is supported by as many browsers as possible. It is recommended
-that you choose files of type *audio/ogg* (typically with the file extension
-`.ogg`), since that will probably work without too much trouble in all major
-browsers supported by the Khan Academy environment.
+that you provide your audio elements in at least a couple of different
+formats. Using *audio/ogg* (with the file extension `.ogg`), and *audio/mpg*
+(with the file extension `.mp3`) is a good combination, since both provide
+good compression, and between the two there's a good chance that the audio
+will work in all major browsers supported by the Khan Academy environment.
+If you only provide one format per file, then it's very likely that some
+users of your program will not hear any sounds (e.g. `.ogg` files don't work
+in current versions of Safari, and `.mp3` files don't work in current
+versions of Firefox).
 
-MAM supports loading audio elements, and provides them as objects of type
+MAM loads audio elements, and provides them as objects of type
 [`HTMLAudioElement`][html-audio-element] in the main callback. Just specify
 the `audio` property in the main configuration object, with an object where
 each key will be used as the audio identifier, and its value is a string
 specifying the URL where the audio file is hosted. You may also specify an
-array with one or more URLs, in case you want to provide alternative formats
-for the same audio element. Browsers will use the first audio file that it
-has support for.
+array with one or more URLs, to provide alternative formats for the same
+audio element. Browsers will use the first audio file that it has support
+for.
 
 An example:
 
@@ -369,12 +383,25 @@ var config = {
 	audio: {
 		song: 'https://www.example.com/cool_song.ogg',
 		boom: [
+			'http://example.com/sounds/boom.ogg',
 			'http://example.com/sounds/boom.mp3',
 			'http://example.com/sounds/boom.wav'
 		]
 	}
 };
 ```
+
+If the browser doesn't have support for `Audio` elements, or if a specific
+audio element you requested is in a format not supported by the user's
+browser, then MAM will not return the corresponding audio element in the
+main callback. This means you should always verify inside your program if
+the audio elements are defined or not, before you play them. In addition,
+you should not rely on the audio elements being fully loaded by the browser
+inside the main callback. Detecting if audio elements are fully ready to be
+played using HTML5 is unreliable *by design*.
+
+For more details on the proper way to setup audio with MAM, check out the
+audio example from [Appendix A](#appendix-a).
 
 
 ### Defining Fonts
@@ -415,6 +442,21 @@ The fonts are given back to you in the main callback as objects of type
 with the regular `textFont` and `text` functions.
 
 
+### Debug Information
+
+If you run into problems using MAM, try specifying the `debug` property in
+the MAM configuration object (setting it to a *truthy* value), and then
+check your browser's JavaScript console. Example:
+
+```javascript
+var config = {
+	debug: true,
+	images: { pic: 'http://example.com/mypicture.jpg' },
+	audio: { song: 'http://example.com/song.mp3' }
+};
+```
+
+
 ### The Main Callback {#main-callback}
 
 All the previous properties were used to declare which assets to import.
@@ -432,6 +474,21 @@ you declare an image as `config.images.myImage`, then you can refer to that
 asset as `media.images.myImage` (provided that you use the name `media` for
 the single argument to `onReady`).
 
+This "return value", which is passed as the only argument to your main
+callback also contains an object under the `support` property, which will
+contain the following values:
+
+*   `audio`: True if, and only if, the browser has support for HTML5 audio.
+	All modern browsers *should* have audio support, but Safari is a notable
+	exception under certain setups, where multimedia support depends on
+	external software (the Quicktime runtime).
+
+*   `cors`: True if, and only if, the browser has support for requesting
+	images with the HTML `image` tag, using the CORS technology. MAM tries
+	some fallback mechanisms to load the images anyway in browsers that
+	don't support this (notably, Safari versions older than 6.0), but in
+	case something doesn't work, you can start by checking this value.
+
 Here's a short example:
 
 ```javascript
@@ -443,6 +500,13 @@ var config = {
 	onReady: function(media) {
 		background(255, 255, 255);
 		image(media.images.somePicture, 0, 0);
+
+		if (media.support.audio) {
+			println('The browser has support for audio');
+		}
+		if (media.support.cors) {
+			println('The browser supports CORS images');
+		}
 	}
 };
 
@@ -530,7 +594,7 @@ sprite, as well as a group of frames, that are then used in an animation.
 ### Importing Audio
 
 Reproduces two sounds, one in OGG format and one in WAV format. It also
-illustrated the use of the `loop` property in a `HTMLAudioElement` object.
+illustrates the use of the `loop` property in a `HTMLAudioElement` object.
 
 <script src="https://gist.github.com/lbv/5621644.js?file=mam-example-audio.js"></script>
 

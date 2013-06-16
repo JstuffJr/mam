@@ -1,6 +1,6 @@
 root = exports ? this
 
-MAM_VERSION = 'pre5'
+MAM_VERSION = 'pre5p1'
 GOOGLE_FONTS = '//ajax.googleapis.com/ajax/libs/webfont/1/webfont.js'
 
 checkAudio = ->
@@ -69,6 +69,7 @@ root.MAM = class MAM
 
 		@print "pending #{@task.pending} tasks"
 		@promise = @task.dfd.promise()
+		@task.dfd.resolve @media if @task.pending is 0
 
 	loadAudio: (id, urls) ->
 		urls = [ urls ] if _.isString urls
