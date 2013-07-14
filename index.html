@@ -3,349 +3,74 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <title>Media Assets Manager</title>
+  <title></title>
   <style type="text/css">code{white-space: pre;}</style>
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <style type="text/css">
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; }
-code > span.dt { color: #902000; }
-code > span.dv { color: #40a070; }
-code > span.bn { color: #40a070; }
-code > span.fl { color: #40a070; }
-code > span.ch { color: #4070a0; }
-code > span.st { color: #4070a0; }
-code > span.co { color: #60a0b0; font-style: italic; }
-code > span.ot { color: #007020; }
-code > span.al { color: #ff0000; font-weight: bold; }
-code > span.fu { color: #06287e; }
-code > span.er { color: #ff0000; font-weight: bold; }
-  </style>
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=IM+Fell+English">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Vollkorn">
   <link rel="stylesheet" href="css/pandoc.css">
-  <link rel="stylesheet" href="css/gist.css">
+  <link rel="stylesheet" href="css/doc.css">
 </head>
 <body>
-<header>
-<h1 class="title">Media Assets Manager</h1>
-</header>
-<nav id="TOC">
-<ul>
-<li><a href="#introduction">Introduction</a><ul>
-<li><a href="#change-log">Change Log</a></li>
-<li><a href="#important-notice">Important Notice</a></li>
-<li><a href="#contact">Contact</a></li>
-</ul></li>
-<li><a href="#library-documentation">Library Documentation</a><ul>
-<li><a href="#overview">Overview</a></li>
-<li><a href="#the-glue-code">The Glue Code</a></li>
-<li><a href="#the-configuration-object">The Configuration Object</a></li>
-</ul></li>
-<li><a href="#appendices">Appendices</a><ul>
-<li><a href="#appendix-a">Appendix A: Full Examples</a></li>
-<li><a href="#appendix-b">Appendix B: Places to Find Public Works</a></li>
-<li><a href="#appendix-c-general-tips">Appendix C: General Tips</a></li>
-<li><a href="#appendix-d-this-tool-and-the-k.a.">Appendix D: This Tool and the K.A.</a></li>
-</ul></li>
-</ul>
-</nav>
-<h1 id="introduction"><a href="#introduction">Introduction</a></h1>
-<p>The <em>Media Assets Manager</em> (<strong>MAM</strong> from now on), is a JavaScript library created to assist programmers with the inclusion of publicly hosted media assets in their programs for the <a href="https://www.khanacademy.org/cs">Khan Academy C.S. environment</a>. It currently supports images (and sprite extraction from images), audio elements and fonts.</p>
-<p>MAM is currently under development and it is likely that its internal details and programming interface change in the near future. If you would like to help by testing it, please check this page regularly for changes. Development occurs on <a href="https://github.com/lbv/mam">GitHub</a>.</p>
-<p>This documentation assumes some knowledge of the JavaScript language and the Khan Academy programming environment —specifically, the <a href="http://processingjs.org/">Processing.js</a> model, and things like what the <code>draw</code> function does, what a <code>PImage</code> is, and so on. If you’re a beginner without too much experience with the K.A. environment, it’s recommended that you spend some time exploring it and creating at least a few simple programs before trying to use MAM.</p>
-<h2 id="change-log"><a href="#change-log">Change Log</a></h2>
-<ul>
-<li><p><em>2013-06-16</em></p>
-<p><strong>mam-pre5p1</strong> release. Bug fixes. New <code>debug</code> property in the MAM configuration object can be used to provide verbose information about the assets loading process. New <code>support</code> property in MAM’s return object, provides information about the user’s browser. Now the loading process doesn’t get stuck on audio elements, since detecting if they are fully loaded is unreliable <em>by design</em>.</p></li>
-<li><p><em>2013-06-09</em></p>
-<p><strong>mam-pre4</strong> release. New fallbacks mechanisms to import images in situations where the client or server has limited support for CORS (e.g. in Safari versions &lt; 6).</p></li>
-<li><p><em>2013-05-25</em></p>
-<p><strong>mam-pre3</strong> release. Use CORS for images by default.</p></li>
-<li><p><em>2013-05-24</em></p>
-<p><strong>mam-pre2</strong> release. Now the configuration object contains the main callback and <code>draw</code> replacement as well, so <code>mamLoad</code> receives a single parameter, where all the configuration should be declared.</p></li>
-<li><p><em>2013-05-21</em></p>
-<p>First release.</p></li>
-</ul>
-<h2 id="important-notice"><a href="#important-notice">Important Notice</a></h2>
-<p>Before using MAM, you should be aware of your responsibilities regarding the use of creative works publicly available on the Internet or through other mediums.</p>
-<p>At the very least, you should inform yourself about the basic meaning of terms like <em>copyright</em>, <em>trademark</em> and <em>publishing license</em>. These are broad topics that go beyond the scope of this document, and it’s highly recommended that you invest a little time learning about them in case you need to.</p>
-<p>Here are some basic guidelines (please don’t consider them exhaustive or a substitute for valid legal advice):</p>
-<ul>
-<li><p>Do not use any digital content (including pictures, images and audio files) for which you have not received an explicit permission to use and share. Content creators who want to publicly share their work usually do so by releasing their assets under a specific license which grants certain rights. Look for assets released under licenses such as those promoted by the <a href="http://creativecommons.org/">Creative Commons</a> initiative.</p></li>
-<li><p>The fact that you can find a file in a public website does <em>not</em> necessarily mean that you can use it freely, unless it comes with a license that grants you the appropriate rights. If you’re unsure about the terms of use for a certain piece of content, it’s better not to make any assumptions.</p></li>
-<li><p>Even when you buy certain media files —for example, songs from an online music store—, that usually grants you very restricted permissions, mainly for your own personal use. Again, this does not necessarily mean that you can then post those files online and share them freely. If you want to reuse and remix songs, always study the license under which you acquire your files.</p></li>
-<li><p>Do not directly link to content hosted on websites maintained by others, unless you have received permission to do so. Store your media files in your own hosting servers whenever possible.</p></li>
-<li><p>Avoid using the names and identities of popular video game characters or celebrities in your programs. They are typically covered by trademarks, and many video game companies and famous “celebrities” (such as singers, actors, and so on) work with law firms who actively go after people breaching said trademarks on the Internet. Try inventing your own characters for your own video–games and programs. Be creative!</p></li>
-</ul>
-<p>In summary, try to always apply some common sense, and be respectful of other people’s rights. Strive to create your own assets as much as possible. If you feel like you need a hand, no problem. Fortunately, the Internet is a big place, and many people do share their works with permisive licenses. You may find a few recommendations on <a href="#appendix-b">Appendix B</a>.</p>
-<h2 id="contact"><a href="#contact">Contact</a></h2>
-<p>If you have a suggestion or want to report a problem, please post a comment in the <em>Tips &amp; Feedback</em> section of the main <a href="http://www.khanacademy.org/cs/mam-demo/1663711308">MAM Demo</a> program. This program may be considered the authoritative reference on how to use MAM, and it will always be kept up–to–date in relation to the latest changes of the library.</p>
-<p>If you try to use MAM in one of your programs and run into a problem, you’re welcome to ask for help. Please keep in mind that posting a message simply stating <em>“it doesn’t work”</em> is not very helpful. Make sure you have read this documentation carefully, and try being as specific as you can in your message, posting a link to your program if possible.</p>
-<h1 id="library-documentation"><a href="#library-documentation">Library Documentation</a></h1>
-<h2 id="overview"><a href="#overview">Overview</a></h2>
-<p>A program using MAM should include the following elements:</p>
-<ul>
-<li><p>The glue code. A short segment of code that imports the MAM library itself.</p></li>
-<li><p>The definition of a <em>configuration object</em>. This specifies all the media assets that you want to use in your program, as well as a few other important details that connect your programs with those assets once they have been loaded.</p></li>
-<li><p>Finally, a call to the <code>mamLoad</code> function. This function simply receives the configuration object, and initiates the process of loading the assets.</p></li>
-</ul>
-<p>These elements will be described in more detail in the following sections.</p>
-<p>A good way to learn how MAM works is by playing with a few examples. You can start by exploring the official <a href="http://www.khanacademy.org/cs/mam-demo/1663711308">MAM Demo</a>. You can also find shorter and more specific examples in <a href="#appendix-a">Appendix A</a>.</p>
-<h2 id="the-glue-code"><a href="#the-glue-code">The Glue Code</a></h2>
-<p>The first thing you need to do is place MAM’s “glue” code in your program. This is just a short snippet of Javascript code that will provide a bridge between your program and the MAM library. This code simply defines a small function called <code>mamLoad</code>, which you will have to call later on with a configuration object.</p>
-<p>This glue code is presented here:</p>
-<script src="https://gist.github.com/lbv/5621048.js"></script>
-
-<p>Just copy and paste it. It’s probably a good idea to put it right at the top of your program.</p>
-<p>Notice that this code has been intentionally <em><a href="http://lisperator.net/uglifyjs/">uglified</a></em>, to make it easy to move around and paste into any JavaScript program. You don’t need to understand how it works in order to use MAM. If you’re interested, though, you can find this glue code in its original form <a href="https://github.com/lbv/mam/blob/master/src/mam-glue.js">here</a>.</p>
-<h2 id="the-configuration-object"><a href="#the-configuration-object">The Configuration Object</a></h2>
-<p>To use MAM, you need to tell it what assets you want to load, and how your program should behave after those assets have been loaded. This is done through a plain JavaScript object, which can look something like this:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// main configuration object</span>
-<span class="kw">var</span> config = {
-    <span class="dt">images</span>: {
-        <span class="co">// declare your images here..</span>
-    },
-
-    <span class="dt">sprites</span>: {
-        <span class="co">// declare your sprites here..</span>
-    },
-
-    <span class="dt">audio</span>: {
-        <span class="co">// declare your audio elements here..</span>
-    },
-
-    <span class="dt">fonts</span>: [
-        <span class="co">// declare your fonts here..</span>
-    ],
-
-    <span class="dt">onReady</span>: <span class="kw">function</span>(media) {
-        <span class="co">// this function will run immediately after the assets</span>
-        <span class="co">// have finished loading</span>
-    },
-
-    <span class="dt">draw</span>: <span class="kw">function</span>() {
-        <span class="co">// this will be the new `draw` function once the assets</span>
-        <span class="co">// are ready</span>
-    }
-};
-
-<span class="co">// start MAM</span>
-<span class="fu">mamLoad</span>(config);</code></pre>
-<p>All the properties shown in the code above are optional, so you don’t <em>have</em> to include them all. The following sections will go into more detail about what each property does.</p>
-<h3 id="defining-images"><a href="#defining-images">Defining Images</a></h3>
-<p>You can define a group of images to be imported by declaring them in an object under the <code>images</code> key of the main configuration object.</p>
-<p>Each key in this object will be used as the identifier of an image, and its value should be a string that specifies the URL where that image is being hosted.</p>
-<p>The following example defines two images, called <code>drawing</code> and <code>myPicture</code> (you would have to make sure that the URLs are valid for your own images, of course):</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
-    <span class="dt">images</span>: {
-        <span class="dt">drawing</span>: <span class="st">&#39;https://example.com/images/drawing.png&#39;</span>,
-        <span class="dt">myPicture</span>: <span class="st">&#39;http://www.example.com/myPicture.jpg&#39;</span>
-    }
-};</code></pre>
-<p>These images will be loaded and given back to you as objects of type <a href="http://processingjs.org/reference/PImage/"><code>PImage</code></a> in the <a href="#main-callback">main callback</a>.</p>
-<p><strong>Important</strong>: Because of security models that apply to the use of external images on top of a HTML canvas, you should import your images from servers that support a technology known as <a href="http://en.wikipedia.org/wiki/Cross-origin_resource_sharing">CORS</a> —standing for <em>cross–origin resource sharing</em>. Two free services that do support CORS are <a href="https://www.dropbox.com/">Dropbox</a> and <a href="https://drive.google.com/">Google Drive</a>, so you may try hosting your images there.</p>
-<p>You could also try importing images from a server without CORS support, but doing so may result in technical problems for some users of your program. If you want to try it anyway, you need to specify the <code>enableCORS</code> property in your main configuration object, and set it to <code>false</code> (it’s assumed to be <code>true</code> by default). For example:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
-    <span class="dt">images</span>: {
-        <span class="dt">myPicture</span>: <span class="st">&#39;http://server-without-cors.example.com/myPicture.jpg&#39;</span>
-    },
-    <span class="dt">enableCORS</span>: <span class="kw">false</span>
-};</code></pre>
-<p>When CORS is explicitly disabled (as shown above), or if the client’s browser has limited support for CORS when loading images, MAM still tries to obtain those files in a way that doesn’t <em>taint</em> the canvas, but it may or may not work, depending on the browser used by the client. A “tainted” canvas means that it becomes <em>write–only</em> (it becomes impossible to read the state of its pixels), and this could result in a situation where you can no longer save your program in the Khan Academy, because part of the saving process involves obtaining the picture from the canvas.</p>
-<p>For more information on CORS and its implications, you may read <a href="https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image">this document</a>.</p>
-<h3 id="defining-sprites"><a href="#defining-sprites">Defining Sprites</a></h3>
-<p>For the purposes of this document, the term “sprite” will mean an image that is “extracted” from another (probably larger) image.</p>
-<p>For example, let’s say that you have an image with a size of <em>300x200</em> pixels, such that it’s divided into four “panels” —each panel covering a corner from the main image, and with a size of <em>150x100</em> pixels. In order to extract the four sprites from this larger image (we could call it a <em>spritesheet</em>), first we need to define the sheet as a regular image:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
-    <span class="dt">images</span>: {
-        <span class="dt">panels</span>: <span class="st">&#39;https://example.com/four_panels.png&#39;</span>
-    }
-};</code></pre>
-<p>With this in place, we can now specify sprites through the <code>sprites</code> property of the main configuration object. The keys of this object will be used as identifiers for the sprites, and the values must be objects that declare the following properties:</p>
-<ul>
-<li><code>sheet</code> — The name of the image (as it was written in the <code>images</code> property from the main config object) from which the sprite(s) will be extracted.</li>
-<li><code>x</code> — The <em>X</em> coordinate for the sprite inside the sheet.</li>
-<li><code>y</code> — The <em>Y</em> coordinate.</li>
-<li><code>width</code> — The width (in pixels) of the sprite.</li>
-<li><code>height</code> — The height (in pixels) of the sprite.</li>
-<li><code>frames</code> — <em>Optional</em>. An integer that indicates the number of sprites that should be extracted sequentially from the sheet. The sprites must be arranged horizontally, one after the other, and all must have the same size. If this property is used, then the corresponding object returned to you in the main callback will be an array of <code>PImage</code> objects, otherwise it will be a single <code>PImage</code>.</li>
-</ul>
-<p>The following code specifies sprites for the four panels in our example. The first two panels (from the top row) will be extracted as individual sprites, while the two bottom panels will be extracted in an array of two elements:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
-    <span class="dt">images</span>: {
-        <span class="dt">panels</span>: <span class="st">&#39;https://example.com/four_panels.png&#39;</span>
-    },
-
-    <span class="dt">sprites</span>: {
-        <span class="dt">topLeft</span>: {
-            <span class="dt">sheet</span>: <span class="st">&#39;panels&#39;</span>,
-            <span class="dt">x</span>: <span class="dv">0</span>,
-            <span class="dt">y</span>: <span class="dv">0</span>,
-            <span class="dt">width</span>: <span class="dv">150</span>,
-            <span class="dt">height</span>: <span class="dv">100</span>
-        },
-        <span class="dt">topRight</span>: {
-            <span class="dt">sheet</span>: <span class="st">&#39;panels&#39;</span>,
-            <span class="dt">x</span>: <span class="dv">150</span>,
-            <span class="dt">y</span>: <span class="dv">0</span>,
-            <span class="dt">width</span>: <span class="dv">150</span>,
-            <span class="dt">height</span>: <span class="dv">100</span>
-        },
-        <span class="dt">bottom</span>: {
-            <span class="dt">sheet</span>: <span class="st">&#39;panels&#39;</span>,
-            <span class="dt">x</span>: <span class="dv">0</span>,
-            <span class="dt">y</span>: <span class="dv">100</span>,
-            <span class="dt">width</span>: <span class="dv">150</span>,
-            <span class="dt">height</span>: <span class="dv">100</span>,
-            <span class="dt">frames</span>: <span class="dv">2</span>
-        }
-    }
-};</code></pre>
-<h3 id="defining-audio-elements"><a href="#defining-audio-elements">Defining Audio Elements</a></h3>
-<p>Modern browsers support <a href="http://en.wikipedia.org/wiki/HTML5_Audio">HTML5 Audio</a>, a relatively recent mechanism designed to manipulate audio content inside web documents.</p>
-<p>With it, it’s pretty straightforward to play basic sounds and music from your programs. The main challenge at the moment is providing the audio in a format that is supported by as many browsers as possible. It is recommended that you provide your audio elements in at least a couple of different formats. Using <em>audio/ogg</em> (with the file extension <code>.ogg</code>), and <em>audio/mpg</em> (with the file extension <code>.mp3</code>) is a good combination, since both provide good compression, and between the two there’s a good chance that the audio will work in all major browsers supported by the Khan Academy environment. If you only provide one format per file, then it’s very likely that some users of your program will not hear any sounds (e.g. <code>.ogg</code> files don’t work in current versions of Safari, and <code>.mp3</code> files don’t work in current versions of Firefox).</p>
-<p>MAM loads audio elements, and provides them as objects of type <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement"><code>HTMLAudioElement</code></a> in the main callback. Just specify the <code>audio</code> property in the main configuration object, with an object where each key will be used as the audio identifier, and its value is a string specifying the URL where the audio file is hosted. You may also specify an array with one or more URLs, to provide alternative formats for the same audio element. Browsers will use the first audio file that it has support for.</p>
-<p>An example:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
-    <span class="dt">audio</span>: {
-        <span class="dt">song</span>: <span class="st">&#39;https://www.example.com/cool_song.ogg&#39;</span>,
-        <span class="dt">boom</span>: [
-            <span class="st">&#39;http://example.com/sounds/boom.ogg&#39;</span>,
-            <span class="st">&#39;http://example.com/sounds/boom.mp3&#39;</span>,
-            <span class="st">&#39;http://example.com/sounds/boom.wav&#39;</span>
-        ]
-    }
-};</code></pre>
-<p>If the browser doesn’t have support for <code>Audio</code> elements, or if a specific audio element you requested is in a format not supported by the user’s browser, then MAM will not return the corresponding audio element in the main callback. This means you should always verify inside your program if the audio elements are defined or not, before you play them. In addition, you should not rely on the audio elements being fully loaded by the browser inside the main callback. Detecting if audio elements are fully ready to be played using HTML5 is unreliable <em>by design</em>.</p>
-<p>For more details on the proper way to setup audio with MAM, check out the audio example from <a href="#appendix-a">Appendix A</a>.</p>
-<h3 id="defining-fonts"><a href="#defining-fonts">Defining Fonts</a></h3>
-<p>Displaying text is a very basic and important operation for many programs. However, there is a common problem related to rendering text which is that of <em>fonts</em>.</p>
-<p>Usually when you choose a certain font for your program’s text, it has to belong to one of the very few widely available (or simply generic) font families used in computing. Otherwise, there’s a good chance that many users who don’t have the relevant font(s) installed in their systems will see your program with a different, “fallback” font, and this could easily ruin the layout of your interface or even make it altogether unusable.</p>
-<p>Fortunately, there exist reasonable solutions to this problem nowadays. In the context of web applications, for example, new fonts can be easily imported using JavaScript and CSS. MAM provides support for loading fonts released by the <a href="http://www.google.com/fonts/">Google Fonts</a> project. You may use any of the 600+ font families currently in their collection.</p>
-<p>Simply define the <code>fonts</code> key in the main configuration object, setting its value to an array of font family names. Just make sure the names correspond to valid font family names from Google Fonts. For example:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
-    <span class="dt">fonts</span>: [ <span class="st">&#39;Roboto Slab&#39;</span>, <span class="st">&#39;Milonga&#39;</span> ]
-};</code></pre>
-<p>The previous example loads two font families, called <em>Roboto Slab</em> and <em>Milonga</em>. Visit the Google Fonts website for more details about these and other available fonts.</p>
-<p>The fonts are given back to you in the main callback as objects of type <a href="http://processingjs.org/reference/PFont/"><code>PFont</code></a>, which you can then use with the regular <code>textFont</code> and <code>text</code> functions.</p>
-<h3 id="debug-information"><a href="#debug-information">Debug Information</a></h3>
-<p>If you run into problems using MAM, try specifying the <code>debug</code> property in the MAM configuration object (setting it to a <em>truthy</em> value), and then check your browser’s JavaScript console. Example:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
-    <span class="dt">debug</span>: <span class="kw">true</span>,
-    <span class="dt">images</span>: { <span class="dt">pic</span>: <span class="st">&#39;http://example.com/mypicture.jpg&#39;</span> },
-    <span class="dt">audio</span>: { <span class="dt">song</span>: <span class="st">&#39;http://example.com/song.mp3&#39;</span> }
-};</code></pre>
-<h3 id="main-callback"><a href="#main-callback">The Main Callback</a></h3>
-<p>All the previous properties were used to declare which assets to import. Now, in order to use them, you need to react in some way to the event that is fired when all the assets have been loaded.</p>
-<p>The first way in which you can react to that event is by specifying the <code>onReady</code> property in the main configuration object. This should be set to a function that will be called one time (and only one time) right after your assets are ready. The <code>onReady</code> property acts as a <em>callback</em>, and it receives a single parameter, which will be an object filled with all the assets for your program. The structure of this object will mirror the way you declared your assets in the main configuration object. For example, if you declare an image as <code>config.images.myImage</code>, then you can refer to that asset as <code>media.images.myImage</code> (provided that you use the name <code>media</code> for the single argument to <code>onReady</code>).</p>
-<p>This “return value”, which is passed as the only argument to your main callback also contains an object under the <code>support</code> property, which will contain the following values:</p>
-<ul>
-<li><p><code>audio</code>: True if, and only if, the browser has support for HTML5 audio. All modern browsers <em>should</em> have audio support, but Safari is a notable exception under certain setups, where multimedia support depends on external software (the Quicktime runtime).</p></li>
-<li><p><code>cors</code>: True if, and only if, the browser has support for requesting images with the HTML <code>image</code> tag, using the CORS technology. MAM tries some fallback mechanisms to load the images anyway in browsers that don’t support this (notably, Safari versions older than 6.0), but in case something doesn’t work, you can start by checking this value.</p></li>
-</ul>
-<p>Here’s a short example:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> config = {
-    <span class="dt">images</span>: {
-        <span class="dt">somePicture</span>: <span class="st">&#39;http://www.example.com/pic.jpg&#39;</span>
-    },
-
-    <span class="dt">onReady</span>: <span class="kw">function</span>(media) {
-        <span class="fu">background</span>(<span class="dv">255</span>, <span class="dv">255</span>, <span class="dv">255</span>);
-        <span class="fu">image</span>(<span class="ot">media</span>.<span class="ot">images</span>.<span class="fu">somePicture</span>, <span class="dv">0</span>, <span class="dv">0</span>);
-
-        <span class="kw">if</span> (<span class="ot">media</span>.<span class="ot">support</span>.<span class="fu">audio</span>) {
-            <span class="fu">println</span>(<span class="st">&#39;The browser has support for audio&#39;</span>);
-        }
-        <span class="kw">if</span> (<span class="ot">media</span>.<span class="ot">support</span>.<span class="fu">cors</span>) {
-            <span class="fu">println</span>(<span class="st">&#39;The browser supports CORS images&#39;</span>);
-        }
-    }
-};
-
-<span class="fu">mamLoad</span>(config);</code></pre>
-<h3 id="the-draw-replacement"><a href="#the-draw-replacement">The <code>draw</code> Replacement</a></h3>
-<p>The example in the previous section illustrated how to display a static image, by painting it one time inside the main callback. However, you might want to use your assets in a more dynamic program. For this purpose, MAM can replace your program’s main <code>draw</code> function once the assets are ready. Simply declare your <code>draw</code> replacement as the <code>draw</code> property inside the main configuration object.</p>
-<p>Example:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> media;
-
-<span class="kw">var</span> config = {
-    <span class="dt">images</span>: {
-        <span class="dt">somePicture</span>: <span class="st">&#39;http://www.example.com/pic.jpg&#39;</span>
-    },
-
-    <span class="dt">onReady</span>: <span class="kw">function</span>(loadedMedia) {
-        media = loadedMedia;
-    },
-
-    <span class="dt">draw</span>: <span class="kw">function</span>() {
-        <span class="fu">background</span>(<span class="dv">255</span>, <span class="dv">255</span>, <span class="dv">255</span>);
-        <span class="fu">image</span>(<span class="ot">media</span>.<span class="ot">images</span>.<span class="fu">somePicture</span>, mouseX, mouseY);
-    }
-};
-
-<span class="kw">var</span> draw = <span class="kw">function</span>() {
-    <span class="fu">background</span>(<span class="dv">255</span>, <span class="dv">255</span>, <span class="dv">255</span>);
-    <span class="fu">textAlign</span>(CENTER, CENTER);
-    <span class="fu">text</span>(<span class="st">&quot;loading ...&quot;</span>, <span class="dv">200</span>, <span class="dv">200</span>);
-};
-
-<span class="fu">mamLoad</span>(config);</code></pre>
-<p>As you can see, this approach allows you to use a regular <code>draw</code> function (outside the configuration object), which will work as usual while the assets are being loaded, so you can display a relevant message there, and then the main actions for your program will occur in the new <code>draw</code> function you declare inside the configuration object.</p>
-<h1 id="appendices"><a href="#appendices">Appendices</a></h1>
-<h2 id="appendix-a"><a href="#appendix-a">Appendix A: Full Examples</a></h2>
-<h3 id="importing-images"><a href="#importing-images">Importing Images</a></h3>
-<p>This example illustrates a simple way to draw a couple of images.</p>
-<script src="https://gist.github.com/lbv/5621644.js?file=mam-example-images.js"></script>
-
-<h3 id="importing-images-without-cors"><a href="#importing-images-without-cors">Importing Images Without CORS</a></h3>
-<p>In this example, an image is imported from <a href="http://www.flickr.com/">Flickr</a>. However, since their servers don’t support CORS, the program has to disable it explicitly by setting <code>enableCORS</code> to <code>false</code> in the configuration object.</p>
-<p>This causes the canvas to be “tainted” once the image is drawn, so the only chance to save this program reliably is to do it before the <code>image</code> function is used to put the picture on the canvas. For this purpose, this program uses the <code>draw</code> replacement, and displays a warning message before showing the image.</p>
-<script
-src="https://gist.github.com/lbv/5621644.js?file=mam-example-no-cors.js"></script>
-
-<h3 id="importing-sprites"><a href="#importing-sprites">Importing Sprites</a></h3>
-<p>Extracts sprites from a single sheet. It illustrates defining a single sprite, as well as a group of frames, that are then used in an animation.</p>
-<script src="https://gist.github.com/lbv/5621644.js?file=mam-example-sprites.js"></script>
-
-<h3 id="importing-audio"><a href="#importing-audio">Importing Audio</a></h3>
-<p>Reproduces two sounds, one in OGG format and one in WAV format. It also illustrates the use of the <code>loop</code> property in a <code>HTMLAudioElement</code> object.</p>
-<script src="https://gist.github.com/lbv/5621644.js?file=mam-example-audio.js"></script>
-
-<h3 id="importing-fonts"><a href="#importing-fonts">Importing Fonts</a></h3>
-<p>Illustrates how to import a couple of different fonts.</p>
-<script src="https://gist.github.com/lbv/5621644.js?file=mam-example-fonts.js"></script>
+<h1 id="bad-jokes-to-spend-a-cloudy-afternoon-indoors">Bad Jokes to Spend a Cloudy Afternoon Indoors</h1>
+<figure>
+<img src="img/cartoon-welcome-open-window-fresh-air.gif" alt="What’s that ruckus out here?" /><figcaption>What’s that ruckus out here?</figcaption>
+</figure>
+A horse walks into a bar. Bartender says, “Why the long face?”
+<div class="comment">
+Granted, a bit of a trite joke, but also a cornerstone in the history of humour inside the equine community.
+</div>
 
 
-<h2 id="appendix-b"><a href="#appendix-b">Appendix B: Places to Find Public Works</a></h2>
-<p>First of all, you may want to spend some time doing a little research with your favourite web search tool. By choosing your search terms carefully, according to your needs and preferences, you will probably find sites that will be much more relevant to you.</p>
-<p>Having said that, here’s a few recommendations:</p>
-<ul>
-<li><p>If you’re looking primarily for material for video–games, a good place to start is this: <a href="http://freegamedev.net/wiki/Free_3D_and_2D_art_and_audio_resources">Art asset resources</a> from FreeGameDevWiki.</p></li>
-<li><p>In terms of music, there are many so–called “independent” artists that share their music with permissive licenses that you could use in your programs. A few good places to check out are <a href="http://www.jamendo.com/">Jamendo</a>, <a href="https://soundcloud.com/">SoundCloud</a> and <a href="http://bandcamp.com/">Bandcamp</a>.</p></li>
-<li><p>There are many places where you can find works that are considered in the <em>public domain</em>. A few good places to visit are: <a href="http://www.loc.gov/">the Library of Congress</a>, <a href="http://grin.hq.nasa.gov/">Great Images in NASA</a>, <a href="http://digitalgallery.nypl.org/nypldigital/">the New York Public Library</a>, and <a href="http://commons.wikimedia.org/wiki/Main_Page">Wikimedia Commons</a>, among many others.</p></li>
-</ul>
-<h2 id="appendix-c-general-tips"><a href="#appendix-c-general-tips">Appendix C: General Tips</a></h2>
-<ul>
-<li><p>Use sprites whenever it makes sense —for example, if you have a series of images for a single animation, or a group of related and similar drawings. In practice, extracting sprites from a single sheet tends to be much more efficient than loading many individual images from an external host.</p></li>
-<li><p>If possible, try not to make your program too dependant on the availability of your media assets. For example, it could happen that sounds in certain formats (like MP3, for example) do not work reliably in many browsers, so if you’re providing your audio files in MP3 format only, then keep in mind that many users may not hear any sounds at all; adjust your program accordingly.</p></li>
-<li><p>Do not go overboard importing assets. Not everyone connects to the Internet through fast lines, and not everyone uses computers or devices with particularly good processors (think of tablets or netbooks, for example). Also consider that, depending on the terms of service from your hosting provider, using large files may also result in larger bills or poor availability (if you’re subject to bandwidth limits or similar restrictions). Be reasonable and aim for efficient use of all of your resources.</p></li>
-<li><p>Related to the previous point, try to compress your assets as much as possible. Consider that for most casual programs, you don’t really need very high quality sounds or graphics. Discussing effective compression techniques is beyond the scope of this document, but it’s certainly a very good idea to look into it if you plan to use media assets frequently in your programs.</p></li>
-<li><p>It also might be worth your time to learn the basics of <em>computer system usability</em> and <em>user experience</em>. This is a big topic by itself, but here’s a few tips: Try to avoid “busy” designs where you try to fill every pixel of your canvas with strong visuals. Be consistent in your style. Don’t start playing sounds or music at the very beginning of your program without user intervention. If possible, try to guide your design decisions by how people actually use your program, as opposed to how you imagine they should use your program.</p></li>
-</ul>
-<h2 id="appendix-d-this-tool-and-the-k.a."><a href="#appendix-d-this-tool-and-the-k.a.">Appendix D: This Tool and the K.A.</a></h2>
-<p>As a user of the Khan Academy for some time, I’ve had the opportunity to notice a number of things pertaining its community and the behaviour of different types of users of its Computer Science section. I’m aware of the potential misuse that a tool like MAM could represent in this context.</p>
-<p>I’ve repeatedly considered this situation from many different angles, and my conclusion —at least for the time being— is that I do think that exploring previously untapped aspects of the programming environment is useful in itself and, although it could be subject to some degree of abuse (like any other type of technology), I lean towards trusting the current mechanisms in place to moderate the content generated by Khan Academy users.</p>
-<p>I realize that when a new tool comes along that provides a greater degree of flexibility for the creation of public creative works, there can be concerns regarding security as well as social behaviour behind it. I’m willing to contribute in any way I can to provide the most secure as well as useful and beginner–friendly tool possible. It’s perfectly possible that new restrictions might be considered for the programming environment as a result of something like MAM. Nevertheless, it’s my intention to advocate for a responsible use from day one, and it is my hope that, as the saying goes, the baby is not thrown out along with the bath water.</p>
-<p>In case these issues interest you, I have written more about this topic in the following document: <a href="http://lbv.github.io/ka-cs-programs/other/sandbox.html">The Khan Academy C.S. Sandbox</a>.</p>
-<p>I recently came across <a href="http://ask.slashdot.org/comments.pl?sid=3782789&amp;cid=43813915">a message</a> from <a href="http://en.wikipedia.org/wiki/Jimmy_Wales">Jimmy Wales</a> that I think sums up nicely my take on these issues:</p>
-<blockquote>
-<p>Rather than make it hard for users to do what they want to do, on the (very valid) assumption that some of them will do bad things, or things they don’t really want to do, it is better to make it easy for users to recover from those mistakes, and for others to recover easily from any side effects of those mistakes.</p>
-</blockquote>
-<hr />
+<div class="hrule0"></div>
+
+Two chemists walk into a bar. The first one says, “I’ll have a glass of H<sub>2</sub>O”. The second one says, “I’ll have a glass of H<sub>2</sub>O too”. The second one died of poisoning.
+<div class="comment">
+Man… I don’t even understand one lick of chemistry and I still find this hilarious. What is wrong with me?
+</div>
+
+<div class="hrule0"></div>
+
+<p>A rope goes into a bar and orders a drink. Bartender says, “We don’t serve ropes in here. GET OUT!”</p>
+<p>Rope sees his pal outside and explains what happened. His pal ties him into a knot, unravels a few of his strands at the ends, and then sends him back into the bar.</p>
+Bartender says, “Aren’t you that rope I just kicked out of here?!”. Rope says, “No. I’m a frayed knot.”
+<div class="comment">
+Puns based on word kung–fu might just be my favourite kind of pun. This is probably the reason why I could read L. Carroll’s works for all eternity and never get tired of them.
+</div>
+
+<div class="hrule0"></div>
+
+<p>One day, a silly little programmer decides to create a silly little JavaScript library that could help others create innovative and inspiring programs by importing media assets from public URLs. He creates a detailed document explaining how to use this library, and then —in a gesture of utter <em>naïveté</em>— he includes an entire section devoted to explaining the issues of copyrights and trademarks.</p>
+<p>His intention was to combat the ignorance concerning the use of works created by others, at least as far as it concerns software written by beginners who are not yet familiar with the way this strange and ruthless world we live in works.</p>
+<p>The last thing this programmer expected to see was his library being used to create some public program that blatantly ripped–off copyrighted material on the internet. “If I make my best effort to explain the basic rules of usage in this document, and place them right at the top, under the title <strong>Important Notice</strong>, surely people will read this, and everything will be fine”, he thought.</p>
+<p>What a fool.</p>
+<div class="comment">
+<p>Wait, that’s it? Where’s the punchline?</p>
+Ohh, I see what you did here. This is one of those cases where it’s funny ’cause it’s true.
+</div>
+
+<div class="hrule1"></div>
+
+<p>Help me Father. Some days I feel like the heavy burden over my heart is too much. Some days I feel like I’m at the rope’s end and there is no hope for any of us.</p>
+<figure>
+<img src="img/cartoon-big-head-bulgy-eyed-intense-looking-at-you.gif" alt="Oh, I love humanity, it’s people that I cannot stand" /><figcaption>Oh, I love humanity, it’s people that I cannot stand</figcaption>
+</figure>
+<p>I mean, when I think of people who spend their time doing something I love, like programming, I can’t help but to form a picture in my mind of how someone like that might be, and I ascribe certain traits to that picture. I imagine, for example, that such a person (some who <em>codes</em>) would make some effort to read software documentation, and at least spend a few moments to understand the implications of what is explained there.</p>
+<p>I’d like nothing more but to be one with <em>all</em> of my fellow programmers. To play with them in this large sandbox we call Universe and help bring more light into this darkness. It’s just difficult, some days.</p>
+<p>Some days I feel like praying to Mother to come down and wash it all away, as the song goes.</p>
+<figure>
+<img src="img/cartoon-beard.png" alt="I mean, seriously.. ripping off graphics and music from a widely popular Nintendo game?!" /><figcaption>I mean, seriously.. ripping off graphics and music from a widely popular Nintendo game?!</figcaption>
+</figure>
+<p>I know this might be just a pointless exercise at this point, but here’s one last attempt to get this important information across: if you have some time to spare (I think you do, given that you’re reading this), please <a href="http://www.sloperama.com/advice/faq61.htm">read this important information</a>. It will do you good.</p>
+<p>And so, we reach the end of this story, my friends. Soon, this URL will contain nothing but emptiness, and all of this will be nothing but a dim memory in the collective consciousness.</p>
+<p>I’ll confide a little secret to you: my main consolation at times like this, is in the words popularized by of our good friend Gautama..</p>
+<figure>
+<img src="img/cartoon-waltz.png" alt="Some will understand" /><figcaption>Some will understand</figcaption>
+</figure>
+<footer>
+All pictures used in this page are from Edward Lear’s <em>Nonsense</em> books, published under a Public Domain License, at <a href="http://public-domain.zorger.com/more-nonsense/">zorger.com</a>.
+</footer>
 </body>
 </html>

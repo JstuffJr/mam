@@ -1,0 +1,41 @@
+figure {
+	text-align: center;
+}
+
+figure figcaption {
+	font-size: 0.8em;
+	font-family: Vollkorn, serif;
+}
+
+footer {
+	background-color: #d3d7cf;
+	border-radius: 12px;
+	margin: 3em auto;
+	padding: 24px;
+	font-size: 0.8em;
+	width: 80%;
+}
+
+h1 {
+	font-family: 'IM Fell English', serif;
+	font-size: 2em;
+}
+
+.comment {
+	margin-top: 6px;
+	padding-left: 2em;
+	font-size: 0.9em;
+	font-style: oblique;
+}
+
+.hrule0 {
+	background: #fff url(../img/hrule0.png) no-repeat scroll center;
+	height: 6px;
+	margin: 24px 0;
+}
+
+.hrule1 {
+	background: #fff url(../img/hrule1.png) no-repeat scroll center;
+	height: 32px;
+	margin: 24px 0;
+}
