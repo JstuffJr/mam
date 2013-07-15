@@ -1,3 +1,4 @@
+//Now to figure out what this does...
 root = exports ? this
 
 MAM_VERSION = 'pre5p1'
